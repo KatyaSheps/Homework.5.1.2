@@ -1,5 +1,6 @@
 package ru.sheps.android.homework512;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     Button switchBtn;
+    Button btnSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,5 +133,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switchView();
                 break;
         }
+    }
+
+    public void onClickBtnSetting(View view) {
+        Intent intent = new Intent(this, SettingActivity.class);
+        //EditText editText = (EditText) findViewById(R.id.editText);
+//        String message = editText.getText().toString();
+//        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
     }
 }
