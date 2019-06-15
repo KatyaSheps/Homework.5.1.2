@@ -2,6 +2,7 @@
 
 <FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -16,6 +17,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btnSetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="8dp"
+        android:text="Setting"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/normal"
+        app:layout_constraintStart_toStartOf="@+id/normal"
+        app:layout_constraintTop_toBottomOf="@+id/switchBtn" />
 
     <Button
         android:id="@+id/switchBtn"
@@ -77,10 +90,10 @@
 
     <include
         android:id="@+id/normal"
-        android:visibility="visible"
         layout="@layout/tmp_2"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="-29dp" />
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/switchBtn"
+        tools:layout_editor_absoluteX="-16dp" />
 
     <include
         android:id="@+id/engineer"
