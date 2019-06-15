@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Homework.5.1.2</string>
+    <string name="changeView">Change view</string>
+    <string name="cos">cos</string>
+    <string name="sin">sin</string>
+    <string name="tan">tan</string>
+    <string name="log">log</string>
+    <string name="e">e</string>
+    <string name="pi">π</string>
+    <string name="root">√</string>
+    <string name="ln">ln</string>
+    <string name="MC">MC</string>
+    <string name="C">C</string>
+    <string name="percent">%</string>
+    <string name="factorial">x!</string>
 </resources>
