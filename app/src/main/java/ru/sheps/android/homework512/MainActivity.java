@@ -1,42 +1,51 @@
 package ru.sheps.android.homework512;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    TextView resultField;
-    EditText numberField;
-    TextView operationField;
-    Double operand = null;
-    String lastOperation = "=";
+    private TextView resultField;
+    private EditText numberField;
+    private TextView operationField;
+    private Double operand = null;
+    private String lastOperation = "=";
 
+    private Button switchBtn;
+    private Button btnSetting;
 
-    Button switchBtn;
-    Button btnSetting;
+    private ImageView backgroundImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        resultField =(TextView) findViewById(R.id.resultField);
+        resultField = (TextView) findViewById(R.id.resultField);
         numberField = (EditText) findViewById(R.id.numberField);
         operationField = (TextView) findViewById(R.id.operationField);
 
         switchBtn = findViewById(R.id.switchBtn);
         switchBtn.setOnClickListener(this);
+
+        backgroundImage = findViewById(R.id.backgroundImage);
     }
 
     private void switchView() {
         View normal = findViewById(R.id.normal);
         View engineer = findViewById(R.id.engineer);
-        if(normal.getVisibility() == View.VISIBLE) {
+        if (normal.getVisibility() == View.VISIBLE) {
             normal.setVisibility(View.GONE);
             engineer.setVisibility(View.VISIBLE);
         } else {
@@ -49,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString("OPERATION", lastOperation);
-        if(operand!=null)
+        if (operand != null)
             outState.putDouble("OPERAND", operand);
         super.onSaveInstanceState(outState);
     }
@@ -58,31 +67,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         lastOperation = savedInstanceState.getString("OPERATION");
-        operand= savedInstanceState.getDouble("OPERAND");
+        operand = savedInstanceState.getDouble("OPERAND");
         resultField.setText(operand.toString());
         operationField.setText(lastOperation);
     }
 
-    public void onNumberClick(View view){
+    public void onNumberClick(View view) {
 
-        Button button = (Button)view;
+        Button button = (Button) view;
         numberField.append(button.getText());
 
-        if(lastOperation.equals("=") && operand!=null){
+        if (lastOperation.equals("=") && operand != null) {
             operand = null;
         }
     }
-    public void onOperationClick(View view){
 
-        Button button = (Button)view;
+    public void onOperationClick(View view) {
+
+        Button button = (Button) view;
         String op = button.getText().toString();
         String number = numberField.getText().toString();
 
-        if(number.length()>0){
+        if (number.length() > 0) {
             number = number.replace(',', '.');
-            try{
+            try {
                 performOperation(Double.valueOf(number), op);
-            }catch (NumberFormatException ex){
+            } catch (NumberFormatException ex) {
                 numberField.setText("");
             }
         }
@@ -90,35 +100,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         operationField.setText(lastOperation);
     }
 
-    private void performOperation(Double number, String operation){
+    private void performOperation(Double number, String operation) {
 
-        if(operand ==null){
+        if (operand == null) {
             operand = number;
-        }
-        else{
-            if(lastOperation.equals("=")){
+        } else {
+            if (lastOperation.equals("=")) {
                 lastOperation = operation;
             }
-            switch(lastOperation){
+            switch (lastOperation) {
                 case "=":
-                    operand =number;
+                    operand = number;
                     break;
                 case "/":
-                    if(number==0){
-                        operand =0.0;
-                    }
-                    else{
-                        operand /=number;
+                    if (number == 0) {
+                        operand = 0.0;
+                    } else {
+                        operand /= number;
                     }
                     break;
                 case "*":
-                    operand *=number;
+                    operand *= number;
                     break;
                 case "+":
-                    operand +=number;
+                    operand += number;
                     break;
                 case "-":
-                    operand -=number;
+                    operand -= number;
                     break;
             }
         }
@@ -129,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case (R.id.switchBtn) :
+            case (R.id.switchBtn):
                 switchView();
                 break;
         }
@@ -137,9 +145,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onClickBtnSetting(View view) {
         Intent intent = new Intent(this, SettingActivity.class);
-        //EditText editText = (EditText) findViewById(R.id.editText);
-//        String message = editText.getText().toString();
-//        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
+        startActivityForResult(intent, 100);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {
+            return;
+        }
+
+        String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + data.getStringExtra("ImageFileName");
+        Bitmap bitmap = BitmapFactory.decodeFile(fileName);
+        Drawable drawable = new BitmapDrawable(bitmap);
+
+        backgroundImage.setImageDrawable(drawable);
     }
 }
