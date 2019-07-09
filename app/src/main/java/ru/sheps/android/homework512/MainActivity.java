@@ -1,6 +1,7 @@
 package ru.sheps.android.homework512;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,9 +14,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static final String IMAGE = "Image";
     private TextView resultField;
     private EditText numberField;
     private TextView operationField;
@@ -26,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnSetting;
 
     private ImageView backgroundImage;
+    public static SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switchBtn.setOnClickListener(this);
 
         backgroundImage = findViewById(R.id.backgroundImage);
+
+        sharedPreferences = getSharedPreferences("MySharedPreference", MODE_PRIVATE);
+
     }
 
     private void switchView() {
@@ -148,16 +159,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivityForResult(intent, 100);
     }
 
+//    protected FileInputStream getFileInputStream(String fileName) throws FileNotFoundException
+//    {
+//        File locationOfFile = new
+//                File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera");
+//        File destination= new File(locationOfFile , fileName);
+//        FileInputStream fileInputStream;
+//        fileInputStream= new FileInputStream(destination);
+//
+//        return fileInputStream;
+//    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (data == null) {
             return;
         }
 
-        String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + data.getStringExtra("ImageFileName");
-        Bitmap bitmap = BitmapFactory.decodeFile(fileName);
-        Drawable drawable = new BitmapDrawable(bitmap);
+      //  try {
+            File myFile = new File(sharedPreferences.getString(IMAGE, ""));
+            if (myFile.exists()) {
 
-        backgroundImage.setImageDrawable(drawable);
+                Bitmap mybitmap = BitmapFactory.decodeFile(myFile.getAbsolutePath());
+
+                backgroundImage.setImageBitmap(mybitmap);
+
+                Toast.makeText(MainActivity.this, "Image " + myFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(MainActivity.this, "Not image", Toast.LENGTH_SHORT).show();
+            }
+
+            recreate();
+
+
+            // FileInputStream fileInputStream = this.getFileInputStream(data.getStringExtra("ImageFileName"));
+
+           /* Bitmap img = BitmapFactory.decodeStream(fileInputStream);
+
+            Drawable drawable = new BitmapDrawable(img);
+
+            backgroundImage.setImageDrawable(drawable);
+        }
+//        catch (FileNotFoundException e)
+//        {
+//            e.getStackTrace();
+//        }*/
+
+        }
     }
-}
+
